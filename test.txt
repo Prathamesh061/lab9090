@@ -1,0 +1,51 @@
+function isWithinAllowedTime(startDay, endDay, startTime, endTime) {
+    // Get the current date and time
+    const now = new Date();
+    
+    // Extract the current day of the week (0-6, where 0 is Sunday)
+    const currentDay = now.getDay();
+    
+    // Extract the current time in the format "HH:MM"
+    const currentTime = now.toTimeString().slice(0, 5);
+    
+    // Convert start and end times to minutes since midnight
+    const startMinutes = parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]);
+    const endMinutes = parseInt(endTime.split(':')[0]) * 60 + parseInt(endTime.split(':')[1]);
+    const currentMinutes = parseInt(currentTime.split(':')[0]) * 60 + parseInt(currentTime.split(':')[1]);
+    
+    // Check if today is the allowed day and within the allowed time range
+    if (currentDay === startDay && currentDay === endDay) {
+        return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
+    }
+    
+     if (currentDay === startDay && currentMinutes >= startMinutes) {
+            return true;
+        } else if (currentDay === endDay && currentMinutes <= endMinutes) {
+            return true;
+        }
+
+    // Handle the case where startDay is less than or equal to endDay
+    if (startDay < endDay) {
+        if (currentDay > startDay && currentDay < endDay) {
+            return true;
+        }
+    } else { // Handle wrap-around week case
+       if (currentDay > startDay || currentDay < endDay) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+// Example usage:
+const startDay = 5; // Monday
+const endDay = 1; // Monday
+const startTime = "18:00"; // 6:00 PM
+const endTime = "18:00"; // 6:00 PM
+
+if (isWithinAllowedTime(startDay, endDay, startTime, endTime)) {
+    console.log("Access allowed");
+} else {
+    console.log("Access denied");
+}
